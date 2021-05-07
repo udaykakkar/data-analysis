@@ -12,7 +12,7 @@ from w3lib.html import remove_tags
 
 
 def remove_backslashn(value):
-    return value.replace('\n', '').strip()
+    return value.strip()
 
 
 class JobScraperItem(scrapy.Item):

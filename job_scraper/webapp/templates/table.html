@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Indeed Scraped Data</title>
+</head>
+<body>
+	<h1>Indeed Scraped Data</h1>
+	<div class=page>
+		{% for table in tables %}
+    		{{ table|safe }}
+  		{% endfor %}
+	</div>
+</body>
