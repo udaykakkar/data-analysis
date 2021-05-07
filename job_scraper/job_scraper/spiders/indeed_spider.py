@@ -1,26 +1,41 @@
 import scrapy
+from job_scraper.items import JobScraperItem
+from scrapy.loader import ItemLoader
+
 
 class IndeedSpider(scrapy.Spider):
     name = 'indeed'
+    allowed_domains = ['ca.indeed.com']
 
-    start_urls = ['https://ca.indeed.com/jobs?q=full+stack+developer&l=Ottawa%2C+ON']
+    def start_requests(self):
+        job = "full stack developer"
+        location = "ottawa"
+
+        for radius in range(25, 100, 10):
+            start_url = f'https://ca.indeed.com/jobs?q={job}&l={location}&radius={radius}'
+            yield scrapy.Request(start_url, self.parse)
 
     def parse(self, response):
         for job in response.css('div.jobsearch-SerpJobCard'):
-            yield{
-                 'title' : job.css('h2.title a.jobtitle::attr(title)').get(),
-                 'company' : job.css('div.sjcl div span.company a::text').get(),
-                 'rating': job.css('div.sjcl div span.ratingsDisplay a span.ratingsContent::text').get(),
-                 'location' : job.css('div.recJobLoc::attr(data-rc-loc)').get(),
-                 'salary' : job.css('div.salarySnippet span.salary span.salaryText::text').get(),
-                 'description': job.css('div.summary ul li::text').getall()
-             }
+            l = ItemLoader(item=JobScraperItem(), selector=job)
+            l.add_css('title', 'h2.title a.jobtitle::attr(title)')
+            l.add_css('company', 'div.sjcl div span.company a')
+            l.add_css(
+                'rating', 'div.sjcl div span.ratingsDisplay a span.ratingsContent')
+            l.add_css('location', 'div.recJobLoc::attr(data-rc-loc)')
+            l.add_css('salary', 'span.salaryText')
+            l.add_css('description', 'div.summary ul li')
+            yield l.load_item()
 
-        next_page = response.css('ul.pagination-list li a::attr(aria-label)').getall()
-        next_page_link = response.css('ul.pagination-list li a::attr(href)').getall()
+        next_page_link = response.css(
+            'ul.pagination-list li a::attr(href)').getall()
+        next_page = response.css(
+            'ul.pagination-list li a::attr(aria-label)').getall()
+
+        print("next page", next_page)
+        print("next page link", next_page_link)
 
         if next_page[-1].lower() == "next":
-            yield response.follow(url= 'https://ca.indeed.com' + next_page_link[-1], callback= self.parse)        
-           
-
-
+            yield response.follow(url='https://ca.indeed.com' +
+                                  next_page_link[-1],
+                                  callback=self.parse)
