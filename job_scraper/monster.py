@@ -41,4 +41,4 @@ driver = configure_driver()
 job_position = "full stack developer"
 location = "Ottawa"
 getJobs(driver, job_position, location)
-# driver.close()
+driver.close()
