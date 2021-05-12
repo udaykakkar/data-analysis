@@ -16,7 +16,7 @@ def configure_driver():
 
 def getJobs(driver, job_position, location):
     driver.get(
-        f'https://www.monster.ca/jobs/search?q={job_position}&where={location}')
+        f'https://www.monster.ca/jobs/search?q={job_position}&where={location}&tm=1')
     try:
         WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.ID, 'card-view-panel-full')))
@@ -41,4 +41,4 @@ driver = configure_driver()
 job_position = "full stack developer"
 location = "Ottawa"
 getJobs(driver, job_position, location)
-driver.close()
+# driver.close()
