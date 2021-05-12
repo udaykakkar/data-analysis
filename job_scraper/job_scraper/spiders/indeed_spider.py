@@ -4,6 +4,7 @@ import scrapy
 from job_scraper.items import JobScraperItem
 from scrapy.loader import ItemLoader
 
+
 class IndeedSpider(scrapy.Spider):
     name = 'indeed'
     allowed_domains = ['ca.indeed.com']
@@ -11,14 +12,15 @@ class IndeedSpider(scrapy.Spider):
     def start_requests(self):
         job = "full stack developer"
         location = "ottawa"
+        time = 1
 
         for radius in range(25, 100, 10):
-            start_url = f'https://ca.indeed.com/jobs?q={job}&l={location}&radius={radius}'
+            start_url = f'https://ca.indeed.com/jobs?q={job}&l={location}&radius={radius}&fromage={time}'
             yield scrapy.Request(start_url, self.parse)
 
     def parse(self, response):
         for job in response.css('div.jobsearch-SerpJobCard'):
-            l = ItemLoader(item = JobScraperItem(), selector = job)
+            l = ItemLoader(item=JobScraperItem(), selector=job)
             l.add_css('title', 'h2.title a::attr(title)')
             l.add_css('company', 'div.sjcl div span.company')
             l.add_css(
@@ -29,9 +31,9 @@ class IndeedSpider(scrapy.Spider):
             yield l.load_item()
 
         next_page_link = response.xpath(
-            '//ul[@class=pagination-list]/li/a/@href/text()').getall()
+            '//ul[@class=pagination-list]/li/a/@href').getall()
         next_page = response.xpath(
-            '//ul[@class=pagination-list]/li/a/@aria-label/text()').getall()
+            '//ul[@class=pagination-list]/li/a/@aria-label').getall()
 
         if next_page:
             if next_page[-1].lower() == "next":
