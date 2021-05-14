@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/home/uday/data-analysis/venv/bin/python3",
+    "python.formatting.provider": "black"
+}
