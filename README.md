@@ -1,3 +1,10 @@
+# config - that is json
+it should expose some config params , 
+-config config file:
+
+config file:
+1. configurable time ?
+
 # data-analysis
 
 python 
