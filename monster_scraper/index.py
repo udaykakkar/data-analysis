@@ -8,7 +8,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 def configure_driver():
     option = webdriver.ChromeOptions()
-    option.add_argument('— incognito')
+    option.add_argument('--headless')
+    option.add_argument('--incognito')
     driver = webdriver.Chrome(
         ChromeDriverManager().install())
     return driver
@@ -38,7 +39,7 @@ def getJobs(driver, job_position, location):
 
 
 driver = configure_driver()
-job_position = "full stack developer"
-location = "Ottawa"
+job_position = 'full stack developer'
+location = 'Ottawa'
 getJobs(driver, job_position, location)
 driver.close()

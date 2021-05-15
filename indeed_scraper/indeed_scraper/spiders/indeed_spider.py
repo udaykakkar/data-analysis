@@ -1,7 +1,7 @@
 
 from __future__ import unicode_literals
 import scrapy
-from job_scraper.items import JobScraperItem
+from indeed_scraper.items import JobScraperItem
 from scrapy.loader import ItemLoader
 
 

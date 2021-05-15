@@ -7,5 +7,3 @@ activate: source venv/bin/activate
 start a scrapy project: scrapy startproject projectname
 
 result in a josn format: scrapy crawl indeed -o indeed.json  
-
-pip3 install scrapyrt
