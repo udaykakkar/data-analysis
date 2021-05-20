@@ -1,12 +1,11 @@
-FROM python:3.8-slim-buster
+FROM python:latest
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y wget
 
-#COPY requirements.txt requirements.txt
-#RUN pip3 install -r requirements.txt
-RUN pip3 install requests
-RUN pip3 install flask
-RUN pip3 install pandas
-COPY . .
+WORKDIR /data-analysis/webapp
 
-CMD [ "python3", "app.py"]
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 9001
+
+CMD [ "python", "./app.py" ]

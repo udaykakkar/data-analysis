@@ -1,4 +1,3 @@
-
 from __future__ import unicode_literals
 import scrapy
 from indeed_scraper.items import JobScraperItem
@@ -21,19 +20,26 @@ class IndeedSpider(scrapy.Spider):
     def parse(self, response):
         for job in response.css('div.jobsearch-SerpJobCard'):
             l = ItemLoader(item=JobScraperItem(), selector=job)
-            l.add_css('title', 'h2.title a::attr(title)')
-            l.add_css('company', 'div.sjcl div span.company')
-            l.add_css(
-                'rating', 'div.sjcl div span.ratingsDisplay a span.ratingsContent')
-            l.add_css('location', 'div.recJobLoc::attr(data-rc-loc)')
-            l.add_css('salary', 'span.salaryText')
-            l.add_css('description', 'div.summary ul li')
+            l.add_xpath('title', '//a/@title')
+            l.add_xpath('company', '//span[@class="company"]')
+            l.add_xpath(
+                'rating', '//span[@class="ratingsContent"]')
+            l.add_xpath('location', '//div[@class="recJobLoc"]/@data-rc-loc')
+            l.add_xpath('salary', '//span[@class="salaryText"]')
+            l.add_xpath('description', '//div[@class="summary"]/ul/li')
+            # l.add_css('title', 'h2.title a::attr(title)')
+            # l.add_css('company', 'div.sjcl div span.company')
+            # l.add_css(
+            #     'rating', 'div.sjcl div span.ratingsDisplay a span.ratingsContent')
+            # l.add_css('location', 'div.recJobLoc::attr(data-rc-loc)')
+            # l.add_css('salary', 'span.salaryText')
+            # l.add_css('description', 'div.summary ul li')
             yield l.load_item()
 
         next_page_link = response.xpath(
-            '//ul[@class=pagination-list]/li/a/@href').getall()
+            '//ul[@class="pagination-list"]/li/a/@href').getall()
         next_page = response.xpath(
-            '//ul[@class=pagination-list]/li/a/@aria-label').getall()
+            '//ul[@class="pagination-list"]/li/a/@aria-label').getall()
 
         if next_page:
             if next_page[-1].lower() == "next":
